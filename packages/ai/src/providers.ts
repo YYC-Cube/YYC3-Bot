@@ -1,9 +1,17 @@
-import { SYSTEM_PROMPT, PROVIDERS } from "./constants"
+import { PROVIDERS, SYSTEM_PROMPT } from "./constants"
 import type { ChatMessage, ChatResult, HealthStatus } from "./types"
+
+export interface ModelOverride {
+  provider: "zhipu" | "ollama"
+  model: string
+  baseUrl?: string
+  apiKey?: string
+  timeout?: number
+}
 
 export async function checkHealth(
   provider: "zhipu" | "ollama",
-  envOverrides?: { apiKey?: string; baseUrl?: string }
+  envOverrides?: { apiKey?: string; baseUrl?: string },
 ): Promise<HealthStatus> {
   const config = PROVIDERS[provider]
   const baseUrl = envOverrides?.baseUrl || config.baseUrl
@@ -54,9 +62,13 @@ export async function checkHealth(
   }
 }
 
+/**
+ * Original chatStream with automatic fallback (zhipu → ollama).
+ * Kept for backward compatibility.
+ */
 export async function chatStream(
   messages: ChatMessage[],
-  env: { zhipuKey?: string; zhipuBase?: string; ollamaBase?: string }
+  env: { zhipuKey?: string; zhipuBase?: string; ollamaBase?: string },
 ): Promise<ChatResult> {
   const allMessages: ChatMessage[] = [{ role: "system", content: SYSTEM_PROMPT }, ...messages]
 
@@ -79,7 +91,7 @@ export async function chatStream(
     })
     if (!res.ok) throw new Error(`Zhipu ${res.status}`)
     return { provider: "zhipu", stream: res.body! }
-  } catch {}
+  } catch { }
 
   const ollamaBase = env.ollamaBase || PROVIDERS.ollama.baseUrl
   const res = await fetch(`${ollamaBase}/api/chat`, {
@@ -94,7 +106,59 @@ export async function chatStream(
   })
   if (!res.ok) throw new Error(`Ollama ${res.status}`)
 
-  const transformStream = new TransformStream({
+  return { provider: "ollama", stream: res.body!.pipeThrough(createOllamaTransformStream()) }
+}
+
+/**
+ * Dynamic chatStream — accepts model override from user config.
+ */
+export async function chatStreamWithModel(
+  messages: ChatMessage[],
+  override: ModelOverride,
+): Promise<ChatResult> {
+  const allMessages: ChatMessage[] = [{ role: "system", content: SYSTEM_PROMPT }, ...messages]
+  const apiKey = override.apiKey || process.env.ZHIPU_API_KEY || ""
+  const timeout = override.timeout || PROVIDERS[override.provider]?.timeout || 10000
+  const baseUrl = override.baseUrl || PROVIDERS[override.provider]?.baseUrl || ""
+
+  if (override.provider === "zhipu") {
+    const res = await fetch(`${baseUrl}/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: override.model,
+        messages: allMessages,
+        stream: true,
+        temperature: 0.7,
+        top_p: 0.9,
+      }),
+      signal: AbortSignal.timeout(timeout),
+    })
+    if (!res.ok) throw new Error(`Zhipu ${res.status}`)
+    return { provider: "zhipu", stream: res.body! }
+  }
+
+  // Ollama
+  const res = await fetch(`${baseUrl}/api/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: override.model,
+      messages: allMessages,
+      stream: true,
+    }),
+    signal: AbortSignal.timeout(timeout),
+  })
+  if (!res.ok) throw new Error(`Ollama ${res.status}`)
+
+  return { provider: "ollama", stream: res.body!.pipeThrough(createOllamaTransformStream()) }
+}
+
+function createOllamaTransformStream(): TransformStream<Uint8Array, Uint8Array> {
+  return new TransformStream({
     transform(chunk, controller) {
       const decoder = new TextDecoder()
       const text = decoder.decode(chunk, { stream: true })
@@ -105,20 +169,15 @@ export async function chatStream(
           if (parsed.message?.content) {
             controller.enqueue(
               new TextEncoder().encode(
-                `data: ${JSON.stringify({ choices: [{ delta: { content: parsed.message.content } }] })}\n\n`
-              )
+                `data: ${JSON.stringify({ choices: [{ delta: { content: parsed.message.content } }] })}\n\n`,
+              ),
             )
           }
           if (parsed.done) {
             controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"))
           }
-        } catch {}
+        } catch { }
       }
     },
   })
-
-  return {
-    provider: "ollama",
-    stream: res.body!.pipeThrough(transformStream),
-  }
 }
