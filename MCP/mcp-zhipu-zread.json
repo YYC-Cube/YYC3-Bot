@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "zread": {
+      "type": "streamable-http",
+      "url": "https://open.bigmodel.cn/api/mcp/zread/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_ZHIPU_API_KEY"
+      }
+    },
+    "_comment_zread": "YYC³ 开源仓库MCP(ZRead) | GitHub仓库文档搜索/结构获取/文件读取 | search_doc/get_repo_structure/read_file | Max套餐: 4000次/月(与联网搜索/网页读取共享)"
+  }
+}

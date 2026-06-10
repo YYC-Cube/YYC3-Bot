@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "web-reader": {
+      "type": "streamable-http",
+      "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_ZHIPU_API_KEY"
+      }
+    },
+    "_comment_reader": "YYC³ 网页读取MCP | 网页内容抓取/结构化数据 | webReader工具 | Max套餐: 4000次/月(与联网搜索/开源仓库共享)"
+  }
+}

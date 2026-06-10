@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "web-search-prime": {
+      "type": "streamable-http",
+      "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_ZHIPU_API_KEY"
+      }
+    },
+    "_comment_search": "YYC³ 联网搜索MCP | 实时网络搜索 | webSearchPrime工具 | Max套餐: 4000次/月(与网页读取/开源仓库共享)"
+  }
+}

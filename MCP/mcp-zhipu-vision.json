@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "zai-vision-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@z_ai/mcp-server@latest"],
+      "env": { "Z_AI_API_KEY": "YOUR_ZHIPU_API_KEY", "Z_AI_MODE": "ZHIPU" }
+    },
+    "_comment_vision": "YYC³ 视觉理解MCP | GLM-4.6V能力 | 图像分析/视频理解/OCR/UI转代码 | Max套餐: 共享5小时prompt池"
+  }
+}
