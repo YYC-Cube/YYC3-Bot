@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎯 YYC³ Bot — 言宇云枢 智能应用门户
+# 🎯 YYC³ Bot — 言语云枢 智能应用门户
 
 **「 言启象限 · 语枢未来 — 五高五标五化五维核心机制 」**
 
@@ -41,7 +41,7 @@
 
 ## 📋 项目概览
 
-YYC³ Bot 是 **YanYuCloudCube（言宇云枢）** 团队打造的智能应用门户，集 **AI 对话**、**设备监控**、**MCP 服务管理**、**项目矩阵导航** 于一体的全栈智能平台。
+YYC³ Bot 是 **YanYuCloudCube（言语云枢）** 团队打造的智能应用门户，集 **AI 对话**、**设备监控**、**MCP 服务管理**、**项目矩阵导航** 于一体的全栈智能平台。
 
 ### 🎯 核心特性
 
@@ -435,7 +435,7 @@ pnpm test -- --coverage
 
 ## 👥 团队
 
-**YanYuCloudCube（言宇云枢）团队** — [admin@0379.email](mailto:admin@0379.email)
+**YanYuCloudCube（言语云枢）团队** — [admin@0379.email](mailto:admin@0379.email)
 
 ---
 
