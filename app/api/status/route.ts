@@ -36,26 +36,35 @@ async function checkDevice(device: DeviceConfig): Promise<"online" | "offline"> 
 }
 
 export async function GET() {
-  const [ollamaHealth, ...deviceStatuses] = await Promise.all([
-    checkHealth("ollama", { baseUrl: process.env.OLLAMA_BASE_URL }),
-    ...DEVICES.map(checkDevice),
-  ])
+  try {
+    const [ollamaHealth, ...deviceStatuses] = await Promise.all([
+      checkHealth("ollama", { baseUrl: process.env.OLLAMA_BASE_URL }),
+      ...DEVICES.map(checkDevice),
+    ])
 
-  const devices = DEVICES.map((d, i) => ({ ...d, status: deviceStatuses[i] }))
+    const devices = DEVICES.map((d, i) => ({ ...d, status: deviceStatuses[i] }))
 
-  return NextResponse.json({
-    timestamp: Date.now(),
-    ollama: {
-      name: "Ollama",
-      type: "http",
-      status: ollamaHealth.online ? "online" : "offline",
-      models: ollamaHealth.models || [],
-      baseUrl: ollamaHealth.baseUrl,
-      latencyMs: ollamaHealth.latencyMs,
-    },
-    mcpServices: MCP_SERVICES.map((s) => ({ ...s, status: "online", tools: [] })),
-    devices,
-  })
+    return NextResponse.json({
+      timestamp: Date.now(),
+      ollama: {
+        name: "Ollama",
+        type: "http",
+        status: ollamaHealth.online ? "online" : "offline",
+        models: ollamaHealth.models || [],
+        baseUrl: ollamaHealth.baseUrl,
+        latencyMs: ollamaHealth.latencyMs,
+      },
+      mcpServices: MCP_SERVICES.map((s) => ({ ...s, status: "online", tools: [] })),
+      devices,
+    })
+  } catch {
+    return NextResponse.json({
+      timestamp: Date.now(),
+      ollama: { name: "Ollama", type: "http", status: "offline", models: [], baseUrl: "", latencyMs: 0 },
+      mcpServices: MCP_SERVICES.map((s) => ({ ...s, status: "unknown", tools: [] })),
+      devices: DEVICES.map((d) => ({ ...d, status: "unknown" })),
+    })
+  }
 }
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-static"

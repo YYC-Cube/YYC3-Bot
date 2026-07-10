@@ -30,4 +30,4 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ projects: results, stats })
 }
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-static"

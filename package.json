@@ -42,7 +42,6 @@
     "@radix-ui/react-tooltip": "1.2.8",
     "@splinetool/react-spline": "4.1.0",
     "@splinetool/runtime": "1.12.78",
-    "@vercel/analytics": "2.0.1",
     "@yyc3/ai": "workspace:*",
     "@yyc3/core": "workspace:*",
     "@yyc3/eslint-config": "workspace:*",

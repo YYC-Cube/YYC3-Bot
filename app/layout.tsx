@@ -1,7 +1,7 @@
-import { Analytics } from '@vercel/analytics/next'
+
+import { AiChatProvider } from '@/components/ai-chat-provider'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { AiChatProvider } from '@/components/ai-chat-provider'
 import './globals.css'
 
 const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
@@ -49,7 +49,6 @@ export default function RootLayout({
         <AiChatProvider>
           {children}
         </AiChatProvider>
-        <Analytics />
       </body>
     </html>
   )
