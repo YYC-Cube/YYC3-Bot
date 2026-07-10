@@ -32,10 +32,10 @@ describe("OpenAI Provider", () => {
     expect(provider.isReady).toBe(false);
   });
 
-  it("should read apiKey from env when not provided in config", () => {
+  it("should read apiKey from env when not provided in config", async () => {
     vi.stubEnv("OPENAI_API_KEY", "env-key-456");
     const envProvider = new OpenAIProvider({ type: "openai" });
-    expect(envProvider.validate()).resolves.toBe(true);
+    await expect(envProvider.validate()).resolves.toBe(true);
     vi.unstubAllEnvs();
   });
 
