@@ -169,7 +169,7 @@ export default function ChatPage() {
                   : "bg-neutral-100 text-neutral-900"
               )}
             >
-              <div className="whitespace-pre-wrap break-words">
+              <div className="whitespace-pre-wrap wrap-break-word">
                 {msg.content || (
                   <span className="inline-block w-2 h-4 bg-neutral-400 animate-pulse" />
                 )}

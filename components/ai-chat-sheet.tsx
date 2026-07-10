@@ -185,7 +185,7 @@ export function AiChatSheet({ open, onOpenChange }: AiChatSheetProps) {
                     : "bg-white/10 text-white/90"
                 )}
               >
-                <div className="whitespace-pre-wrap break-words">
+                <div className="whitespace-pre-wrap wrap-break-word">
                   {msg.content || (
                     <span className="inline-block w-1.5 h-3.5 bg-white/40 animate-pulse" />
                   )}
