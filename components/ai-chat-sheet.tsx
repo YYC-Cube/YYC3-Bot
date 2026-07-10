@@ -97,7 +97,7 @@ export function AiChatSheet({ open, onOpenChange }: AiChatSheetProps) {
                     return updated
                   })
                 }
-              } catch { }
+              } catch { /* ignore */ }
             }
           }
         }

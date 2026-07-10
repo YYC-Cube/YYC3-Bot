@@ -90,8 +90,8 @@ export async function loadLazyLocaleTranslation(locale: LazyLocale): Promise<Tra
     throw new Error(`Unsupported locale: ${locale}`);
   }
 
-  const module = await registration.loader();
-  return module[registration.exportName] as TranslationMap;
+  const translationModule = await registration.loader();
+  return translationModule[registration.exportName] as TranslationMap;
 }
 
 export function resolveNavigatorLocale(): Locale | null {

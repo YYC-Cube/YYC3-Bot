@@ -64,7 +64,7 @@ export default function StatusPage() {
         ollama: status.ollama || { status: "offline", models: [] },
         timestamp: Date.now(),
       })
-    } catch { }
+    } catch { /* ignore */ }
     setLoading(false)
   }, [])
 

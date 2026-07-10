@@ -52,6 +52,7 @@ export class PerformanceTracker {
   }
 
   createPlugin(): I18nPlugin {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this; // Preserve context
 
     return {

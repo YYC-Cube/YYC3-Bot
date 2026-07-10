@@ -41,7 +41,7 @@ export default function SettingsPage() {
         const data = await statusRes.json()
         setOllama(data.ollama || { status: "offline", models: [] })
       }
-    } catch {}
+    } catch { /* ignore */ }
     setLoading(false)
   }, [])
 

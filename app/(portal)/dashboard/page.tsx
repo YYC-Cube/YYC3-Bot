@@ -52,7 +52,7 @@ export default function DashboardPage() {
         deviceList: health.devices || [],
         servers: servers.servers || [],
       })
-    } catch {}
+    } catch { /* ignore */ }
     setLoading(false)
   }, [])
 

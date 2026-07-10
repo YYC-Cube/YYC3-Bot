@@ -581,27 +581,25 @@ describe("Engine Debug Mode & Error Handling", () => {
 
   it("should resolve translation with nested fallback to English", async () => {
     // Register a partial zh-CN translation that's missing a key
-    errorEngine: {
-      const partialEngine = new I18nEngine({ locale: "en" });
-      partialEngine.registerTranslation("zh-CN", {
-        common: {
-          // Missing "health" key — only has "online"
-          online: "在线",
-        },
-      } as unknown as import("../lib/types").TranslationMap);
+    const partialEngine = new I18nEngine({ locale: "en" });
+    partialEngine.registerTranslation("zh-CN", {
+      common: {
+        // Missing "health" key — only has "online"
+        online: "在线",
+      },
+    } as unknown as import("../lib/types").TranslationMap);
 
-      await partialEngine.setLocale("zh-CN");
+    await partialEngine.setLocale("zh-CN");
 
-      // "common.health" missing in zh-CN → fallback to en
-      const result = partialEngine.t("common.health");
-      expect(result).toBe("Health");
+    // "common.health" missing in zh-CN → fallback to en
+    const result = partialEngine.t("common.health");
+    expect(result).toBe("Health");
 
-      // "common.online" exists in zh-CN
-      const online = partialEngine.t("common.online");
-      expect(online).toBe("在线");
+    // "common.online" exists in zh-CN
+    const online = partialEngine.t("common.online");
+    expect(online).toBe("在线");
 
-      partialEngine.destroy();
-    }
+    partialEngine.destroy();
   });
 
   it("should return undefined for deeply missing keys", () => {

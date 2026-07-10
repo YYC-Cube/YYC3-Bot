@@ -88,7 +88,7 @@ export default function ChatPage() {
                     return updated
                   })
                 }
-              } catch { }
+              } catch { /* ignore */ }
             }
           }
         }

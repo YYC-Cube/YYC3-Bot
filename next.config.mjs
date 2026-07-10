@@ -19,7 +19,7 @@
  * notes: Turbopack 为 Next.js 16 默认构建工具
  */
 
-import { dirname, resolve } from "path"
+import { dirname } from "path"
 import { fileURLToPath } from "url"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))

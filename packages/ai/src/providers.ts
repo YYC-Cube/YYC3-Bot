@@ -91,7 +91,7 @@ export async function chatStream(
     })
     if (!res.ok) throw new Error(`Zhipu ${res.status}`)
     return { provider: "zhipu", stream: res.body! }
-  } catch { }
+  } catch { /* ignore */ }
 
   const ollamaBase = env.ollamaBase || PROVIDERS.ollama.baseUrl
   const res = await fetch(`${ollamaBase}/api/chat`, {
@@ -176,7 +176,7 @@ function createOllamaTransformStream(): TransformStream<Uint8Array, Uint8Array> 
           if (parsed.done) {
             controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"))
           }
-        } catch { }
+        } catch { /* ignore */ }
       }
     },
   })

@@ -66,7 +66,7 @@ describe("Path Guards Utilities", () => {
 
   describe("normalizeWindowsPathForComparison", () => {
     it("should normalize backslashes and lowercase", () => {
-      const result = normalizeWindowsPathForComparison(`C:\Users\Test\File.txt`);
+      const result = normalizeWindowsPathForComparison(`C:\\Users\\Test\\File.txt`);
       expect(result).toBe("c:userstestfile.txt");
     });
 
