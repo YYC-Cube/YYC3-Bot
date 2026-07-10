@@ -1,0 +1,11 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 56157c26fb1086464bf7fa9d4b363bda32ae0770..afdb5bbbe40ab856ef2e97b37fc957d12af451f7 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -45,4 +45,4 @@ declare namespace viteReact {
+ }
+ declare function viteReactForCjs(this: unknown, options: Options): Plugin[];
+ //#endregion
+-export { Options, viteReact as default, viteReactForCjs as "module.exports", reactCompilerPreset };
+\ No newline at end of file
++export { Options, viteReact as default, viteReactForCjs, reactCompilerPreset };
