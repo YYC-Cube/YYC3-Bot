@@ -9,10 +9,17 @@ export async function GET() {
       ORDER BY name
     `
 
+    const byCategory: Record<string, Array<typeof servers[number]>> = {}
+    for (const s of servers) {
+      const cat = s.category || "other"
+      if (!byCategory[cat]) byCategory[cat] = []
+      byCategory[cat].push(s)
+    }
+
     const stats = {
       total: servers.length,
       enabled: servers.filter((s) => s.enabled).length,
-      byCategory: Object.groupBy(servers, (s) => s.category || "other"),
+      byCategory,
     }
 
     return NextResponse.json({ servers, stats })
