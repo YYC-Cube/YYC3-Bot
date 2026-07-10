@@ -3,7 +3,8 @@
 import { cn } from "@yyc3/core"
 import NextImage from "next/image"
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import { LocaleSwitcher } from "./locale-switcher"
 
 const NAV_ITEMS = [
   { label: "首页", href: "/" },
@@ -66,6 +67,7 @@ export function BrandHeader({ className, showNav = true }: BrandHeaderProps) {
               </Link>
             ))}
           </nav>
+          <LocaleSwitcher />
           {mounted && (
             <button
               className="md:hidden text-white/60 hover:text-white"

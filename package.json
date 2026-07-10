@@ -46,6 +46,7 @@
     "@yyc3/core": "workspace:*",
     "@yyc3/eslint-config": "workspace:*",
     "@yyc3/hooks": "workspace:*",
+    "@yyc3/i18n": "workspace:*",
     "@yyc3/ui": "workspace:*",
     "autoprefixer": "^10.5.0",
     "class-variance-authority": "^0.7.1",

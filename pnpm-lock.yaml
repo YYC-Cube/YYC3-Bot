@@ -116,6 +116,9 @@ importers:
       '@yyc3/hooks':
         specifier: workspace:*
         version: link:packages/hooks
+      '@yyc3/i18n':
+        specifier: workspace:*
+        version: link:packages/i18n
       '@yyc3/ui':
         specifier: workspace:*
         version: link:packages/ui
@@ -293,6 +296,9 @@ importers:
       '@yyc3/core':
         specifier: workspace:*
         version: link:../core
+      '@yyc3/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

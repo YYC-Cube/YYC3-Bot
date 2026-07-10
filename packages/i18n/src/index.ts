@@ -15,7 +15,7 @@
  * brief @yyc3/i18n-core 模块入口
  */
 // Core Engine
-export { I18nEngine, i18n, t } from "./lib/engine";
+export { I18nEngine, SUPPORTED_LOCALES, i18n, isSupportedLocale, t } from "./lib/engine";
 export type { I18nEngineConfig } from "./lib/engine";
 
 // Cache System
@@ -79,27 +79,24 @@ export type {
   QERule, QESeverity
 } from "./lib/ai/quality-estimator";
 
-export { OpenAIProvider } from "./lib/ai/openai-provider";
 export { OllamaProvider } from "./lib/ai/ollama-provider";
+export { OpenAIProvider } from "./lib/ai/openai-provider";
 
 // ============================================================
 // ICU MessageFormat Engine (Based on Unicode ICU Specification)
 // ============================================================
 
-export { ICUParser } from "./lib/icu/parser";
 export { ICUCompiler } from "./lib/icu/compiler";
 export type { ICUCompileContext } from "./lib/icu/compiler";
-export type {
-  ICUNode, ICULiteral, ICUArgument, ICUPlural, ICUSelect,
-  ICUSelectOrdinal, ICUNumber, ICUDate, ICUTime,
-  ICUParseResult, ICUParseError, ICUPluralClause, ICUSelectClause
-} from "./lib/icu/types";
+export { ICUParser } from "./lib/icu/parser";
+export type { ICUArgument, ICUDate, ICULiteral, ICUNode, ICUNumber, ICUParseError, ICUParseResult, ICUPlural, ICUPluralClause, ICUSelect, ICUSelectClause, ICUSelectOrdinal, ICUTime } from "./lib/icu/types";
 
 // ============================================================
 // MCP Transport Layer
 // ============================================================
 
-export { StdioTransport } from "./lib/mcp/stdio-transport";
+// StdioTransport uses node:stream - import from "@yyc3/i18n/stdio-transport" for server use
+// export { StdioTransport } from "./lib/mcp/stdio-transport";
 
 // ============================================================
 // CLI Tools (AST Analysis & Chinese Detection)
@@ -127,9 +124,8 @@ export { createLogger, getLogLevel, logger, setLogLevel } from "./lib/infra/logg
 export type { LogLevel, Logger } from "./lib/infra/logger";
 
 // Secure Random
-export {
-  generateSecureFraction, generateSecureHex, generateSecureInt, generateSecureToken, generateSecureUuid
-} from "./lib/infra/secure-random";
+// Uses node:crypto - import from "@yyc3/i18n/secure-random" for server use
+// export { generateSecureFraction, ... } from "./lib/infra/secure-random";
 
 // ============================================================
 // Security Utilities (from FAmily π³ - Enterprise Security)
@@ -159,13 +155,10 @@ export { safeEqualSecret } from "./lib/security/secret-equal";
 export { formatRelativeTimestamp, formatTimeAgo } from "./lib/utils/format-time";
 export type { FormatRelativeTimestampOptions, FormatTimeAgoOptions } from "./lib/utils/format-time";
 
-// Path Guards (Traversal Prevention)
-export {
-  hasNodeErrorCode, isNodeError, isNotFoundPathError, isPathInside, isSymlinkOpenError, normalizeWindowsPathForComparison
-} from "./lib/utils/path-guards";
+// Path Guards (Traversal Prevention) - uses node:path
+// Import from "@yyc3/i18n/path-guards" for server use
+// export { hasNodeErrorCode, ... } from "./lib/utils/path-guards";
 
-// JSON File Operations
-export {
-  deleteJsonFile, jsonFileExists, loadJsonFile,
-  saveJsonFile
-} from "./lib/utils/json-file";
+// JSON File Operations - uses node:fs
+// Import from "@yyc3/i18n/json-file" for server use
+// export { deleteJsonFile, ... } from "./lib/utils/json-file";

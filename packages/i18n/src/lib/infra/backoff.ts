@@ -14,7 +14,7 @@
  *
  * brief 指数退避重试
  */
-import { setTimeout as delay } from "node:timers/promises";
+const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export type BackoffPolicy = {
   initialMs: number;
@@ -40,8 +40,20 @@ export async function sleepWithAbort(ms: number, abortSignal?: AbortSignal): Pro
   if (ms <= 0) {
     return;
   }
+  if (abortSignal?.aborted) {
+    throw new Error("aborted");
+  }
   try {
-    await delay(ms, undefined, { signal: abortSignal });
+    await new Promise<void>((resolve, reject) => {
+      const timer = setTimeout(resolve, ms);
+      if (abortSignal) {
+        const onAbort = () => {
+          clearTimeout(timer);
+          reject(new Error("aborted"));
+        };
+        abortSignal.addEventListener("abort", onAbort, { once: true });
+      }
+    });
   } catch (err) {
     if (abortSignal?.aborted) {
       throw new Error("aborted", { cause: err });

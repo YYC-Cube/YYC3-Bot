@@ -1,8 +1,10 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
 import { cn } from "@yyc3/core"
-import { Settings, Server, Cpu, ToggleLeft, ToggleRight, Trash2, RefreshCw, Plus } from "lucide-react"
+import type { Locale } from "@yyc3/i18n"
+import { i18n, SUPPORTED_LOCALES } from "@yyc3/i18n"
+import { Cpu, Globe, RefreshCw, Server, Settings, ToggleLeft, ToggleRight, Trash2 } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
 
 interface McpServer {
   id: string
@@ -20,11 +22,33 @@ interface OllamaInfo {
   models: string[]
 }
 
+const LOCALE_LABELS: Record<Locale, string> = {
+  en: "English",
+  "zh-CN": "简体中文",
+  "zh-TW": "繁體中文",
+  ja: "日本語",
+  ko: "한국어",
+  fr: "Français",
+  de: "Deutsch",
+  es: "Español",
+  "pt-BR": "Português",
+  ar: "العربية",
+}
+
 export default function SettingsPage() {
   const [servers, setServers] = useState<McpServer[]>([])
   const [ollama, setOllama] = useState<OllamaInfo>({ status: "offline", models: [] })
   const [loading, setLoading] = useState(true)
-  const [tab, setTab] = useState<"mcp" | "ai" | "about">("mcp")
+  const [tab, setTab] = useState<"mcp" | "ai" | "about" | "i18n">("mcp")
+  const [currentLocale, setCurrentLocale] = useState<Locale>(i18n.getLocale())
+  const [syncingLocale, setSyncingLocale] = useState(false)
+
+  useEffect(() => {
+    const unsub = i18n.subscribe((locale) => {
+      setCurrentLocale(locale)
+    })
+    return unsub
+  }, [])
 
   const fetchAll = useCallback(async () => {
     setLoading(true)
@@ -67,9 +91,20 @@ export default function SettingsPage() {
     }
   }
 
+  async function handleLocaleSwitch(locale: Locale) {
+    if (locale === currentLocale || syncingLocale) return
+    setSyncingLocale(true)
+    try {
+      await i18n.setLocale(locale)
+    } finally {
+      setSyncingLocale(false)
+    }
+  }
+
   const tabs = [
     { id: "mcp" as const, label: "MCP 服务", icon: Server },
     { id: "ai" as const, label: "AI 模型", icon: Cpu },
+    { id: "i18n" as const, label: "语言", icon: Globe },
     { id: "about" as const, label: "关于", icon: Settings },
   ]
 
@@ -220,6 +255,92 @@ export default function SettingsPage() {
                   <span className={cn("text-[10px] font-sans", item.active ? "text-white/70" : "text-neutral-400")}>
                     {item.desc}
                   </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab === "i18n" && (
+        <div className="space-y-4">
+          <div className="rounded-lg border border-neutral-200 bg-white p-5">
+            <h3 className="text-sm font-semibold font-sans text-neutral-900 mb-3">界面语言</h3>
+            <p className="text-xs text-neutral-500 font-sans mb-4">
+              当前语言：<span className="font-medium text-neutral-900">{LOCALE_LABELS[currentLocale]}</span>
+              <span className="text-neutral-400 ml-1">({currentLocale})</span>
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+              {SUPPORTED_LOCALES.map((locale) => {
+                const loc = locale as Locale
+                const isActive = loc === currentLocale
+                return (
+                  <button
+                    key={locale}
+                    onClick={() => handleLocaleSwitch(loc)}
+                    disabled={syncingLocale || isActive}
+                    className={cn(
+                      "px-3 py-2.5 rounded-lg border text-xs font-sans transition-all",
+                      isActive
+                        ? "bg-black text-white border-black"
+                        : "border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:bg-neutral-50",
+                      (syncingLocale || isActive) && "opacity-80 cursor-not-allowed"
+                    )}
+                  >
+                    {LOCALE_LABELS[loc]}
+                    {isActive && (
+                      <span className="ml-1 text-white/70">✓</span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-neutral-200 bg-white p-5">
+            <h3 className="text-sm font-semibold font-sans text-neutral-900 mb-3">同步设置</h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium font-sans text-neutral-700">本地存储持久化</p>
+                  <p className="text-[10px] text-neutral-400 font-sans">语言偏好自动保存至浏览器 localStorage</p>
+                </div>
+                <span className="flex items-center gap-1.5 text-xs text-emerald-600 font-sans">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                  已启用
+                </span>
+              </div>
+              <div className="flex items-center justify-between pt-3 border-t border-neutral-100">
+                <div>
+                  <p className="text-xs font-medium font-sans text-neutral-700">浏览器语言检测</p>
+                  <p className="text-[10px] text-neutral-400 font-sans">首次访问时自动检测系统语言偏好</p>
+                </div>
+                <span className="flex items-center gap-1.5 text-xs text-emerald-600 font-sans">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                  已启用
+                </span>
+              </div>
+              <div className="flex items-center justify-between pt-3 border-t border-neutral-100">
+                <div>
+                  <p className="text-xs font-medium font-sans text-neutral-700">实时切换同步</p>
+                  <p className="text-[10px] text-neutral-400 font-sans">切换语言时立即更新所有组件显示</p>
+                </div>
+                <span className="flex items-center gap-1.5 text-xs text-emerald-600 font-sans">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                  已启用
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-neutral-200 bg-white p-5">
+            <h3 className="text-sm font-semibold font-sans text-neutral-900 mb-3">支持语言</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              {SUPPORTED_LOCALES.map((locale) => (
+                <div key={locale} className="flex items-center gap-2 px-3 py-2 rounded-md bg-neutral-50 border border-neutral-100">
+                  <Globe className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+                  <span className="text-xs text-neutral-700 font-sans">{LOCALE_LABELS[locale as Locale]}</span>
+                  <span className="text-[10px] text-neutral-400 font-mono">{locale}</span>
                 </div>
               ))}
             </div>
