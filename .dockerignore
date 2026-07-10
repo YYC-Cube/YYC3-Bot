@@ -1,0 +1,17 @@
+node_modules
+.git
+.gitignore
+.next
+out
+dist
+.env
+.env.*
+!.env.example
+README.md
+docs
+*.md
+.DS_Store
+.pnpm-store
+.vercel
+.trae
+coverage
